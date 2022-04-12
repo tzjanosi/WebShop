@@ -1,6 +1,14 @@
 package validators;
 
+import repositories.UserRepository;
+
 public class UserValidator {
+
+    private UserRepository userRepository;
+
+    public UserValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public void validateRegistration(String email, String password) {
         validateEmail(email);
@@ -30,6 +38,12 @@ public class UserValidator {
         }
         if (password.length() < 8) {
             throw new IllegalArgumentException("Entered password is too short. It must be at least 8 characters!");
+        }
+    }
+
+    public void checkIfUserExists(String email) {
+        if (userRepository.findUserByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email: '" + email + "' had been registered!");
         }
     }
 }

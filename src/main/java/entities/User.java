@@ -12,9 +12,6 @@ public class User {
     * Constructor for user registration.
     **/
     public User(String email, String password) {
-        email = email.strip();
-        password = password.strip();
-        new UserValidator().validateRegistration(email, password);
         this.email = email;
         this.password = password.hashCode();
     }
