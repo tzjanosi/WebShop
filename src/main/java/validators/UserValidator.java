@@ -41,9 +41,7 @@ public class UserValidator {
         }
     }
 
-    public void checkIfUserExists(String email) {
-        if (userRepository.findUserByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("Email: '" + email + "' had been registered!");
-        }
+    public boolean checkIfUserExists(String email) {
+        return userRepository.findUserByEmail(email).isPresent();
     }
 }
