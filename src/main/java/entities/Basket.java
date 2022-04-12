@@ -1,5 +1,7 @@
 package entities;
 
+import validators.BasketValidator;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +21,11 @@ public class Basket {
         if (amount == null) {
             products.put(product, products.get(product) + 1);
         }
+    }
+
+    public void removeProduct(Product product) {
+        new BasketValidator().validateProductInBasket(products, product);
+        products.remove(product);
     }
 
     public Long getId() {
