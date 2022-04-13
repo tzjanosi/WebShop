@@ -4,12 +4,13 @@ import entities.Product;
 
 import entities.User;
 import org.springframework.jdbc.core.JdbcTemplate;
+import service.ProductServiceRepository;
 
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
-public class ProductRepository {
+public class ProductRepository implements ProductServiceRepository {
     private JdbcTemplate jdbcTemplate;
 
     public ProductRepository(DataSource dataSource) {
@@ -22,6 +23,12 @@ public class ProductRepository {
 
     }
 
+    @Override
+    public List<Product> getAllProducts() {
+        return null;
+    }
+
+    @Override
     public Optional<Product> findProductByName(String name) {
         List<Product> result=jdbcTemplate.query("SELECT * FROM product WHERE name = ? ORDER BY id DESC",new ProductMapper(), name);
         if(result.isEmpty()){

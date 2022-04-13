@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  web-shop:
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_DATABASE: mariadb
+      MARIADB_ROOT_PASSWORD: root
