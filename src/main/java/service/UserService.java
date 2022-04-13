@@ -1,5 +1,6 @@
 package service;
 
+import controller.UserControllerService;
 import entities.User;
 import repositories.UserRepository;
 import validators.UserValidator;
@@ -7,7 +8,7 @@ import validators.UserValidator;
 import javax.sql.DataSource;
 import java.util.Optional;
 
-public class UserService {
+public class UserService implements UserControllerService {
 
     private UserRepository userRepository;
     private UserValidator validator;
@@ -17,24 +18,26 @@ public class UserService {
         this.validator = new UserValidator(userRepository);
     }
 
-    public void registerUser(String email, String password) {
+    @Override
+    public Optional<User> registerUser(String email, String password) {
         email = email.strip();
         password = password.strip();
         if (validator.checkIfUserExists(email)) {
-            throw new IllegalArgumentException("Email: '" + email + "' had been registered!");
+            return Optional.empty();
         }
         validator.validateRegistration(email, password);
-        userRepository.saveUser(new User(email, password));
+        return userRepository.saveUser(new User(email, password));
     }
 
-    public boolean loginUser(String email, String password) {
+    @Override
+    public Optional<User> loginUser(String email, String password) {
         Optional<User> optionalUser = userRepository.findUserByEmail(email);
         if (optionalUser.isEmpty()) {
-            throw new IllegalArgumentException("Email: '" + email + "' is not registered!");
+            return optionalUser;
         }
         if (optionalUser.get().getPassword() != password.hashCode()) {
-            throw new IllegalArgumentException("Password didn't match for user: " + email + "!");
+            return Optional.empty();
         }
-        return true;
+        return optionalUser;
     }
 }

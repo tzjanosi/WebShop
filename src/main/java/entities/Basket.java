@@ -5,22 +5,20 @@ import validators.BoughtProductValidator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BoughtProduct {
+public class Basket {
 
     private final Long id;
     private final User user;
     private Map<Product, Integer> products = new HashMap<>();
 
-    public BoughtProduct(Long id, User user) {
+    public Basket(Long id, User user) {
         this.id = id;
         this.user = user;
     }
 
-    public void addProduct (Product product) {
-        Integer amount = products.putIfAbsent(product, 1);
-        if (amount == null) {
-            products.put(product, products.get(product) + 1);
-        }
+    public void addProduct(Product product, int amount) {
+        products.putIfAbsent(product, 0);
+        products.put(product, products.get(product) + amount);
     }
 
     public void removeProduct(Product product) {

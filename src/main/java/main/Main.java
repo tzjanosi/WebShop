@@ -1,6 +1,9 @@
+package main;
+
 import controller.WebShopController;
 import entities.Product;
 import org.mariadb.jdbc.MariaDbDataSource;
+import repositories.BasketRepository;
 import repositories.DBSource;
 import service.*;
 
@@ -11,7 +14,6 @@ public class Main {
 
         UserService userService=new UserService(dataSource);
         ProductService productService=new ProductService(dataSource);
-
 
 
         //Gyors teszt
@@ -31,7 +33,9 @@ public class Main {
         System.out.println("Login (OK):"+userService.loginUser("Fehervirag@freemail.hu", "pass987word"));
 //        System.out.println("Login (NOK):"+userService.loginUser("Fehervirag@freemail.hu", "pass87word"));
 //        System.out.println("Login (NOK):"+userService.loginUser("Fehervrag@freemail.hu", "pass987word"));
-        WebShopController webShopController= new WebShopController();
+
+        BasketService basketService = new BasketService(new BasketRepository());
+        WebShopController webShopController= new WebShopController(basketService, productService, userService);
         webShopController.menu();
 
     }

@@ -81,10 +81,10 @@ Repo for the teamwork
 
 ## BoughtProductService
 
-- BoughtProductRepository boughtProductRepository
+- BoughtProductRepository basketRepository
 
 
-- BoughtProductService(BoughtProductRepository boughtProductRepository)
+- BoughtProductService(BoughtProductRepository basketRepository)
 
 ## ProductService
 
