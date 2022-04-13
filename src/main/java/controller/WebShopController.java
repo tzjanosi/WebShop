@@ -3,7 +3,6 @@ package controller;
 import entities.Basket;
 import entities.Product;
 import entities.User;
-import service.BasketService;
 import service.ProductService;
 import service.UserService;
 
@@ -19,17 +18,19 @@ public class WebShopController {
 
     private static final List<String> YES_NO_ANSWERS = Arrays.asList("y", "yes", "i", "igen", "n", "no", "nem");
 
-    private BasketService basketService;
+    private BasketControllerService basketService;
 
-    private ProductService productService;
+    private ProductControllerService productService;
 
-    private UserService userService;
+    private UserControllerService userService;
 
     private Basket actualOrder;
 
     private List<Product> products;
 
-    public WebShopController(BasketService basketService, ProductService productService, UserService userService) {
+    private InputValidator validator;
+
+    public WebShopController(BasketControllerService basketService, ProductControllerService productService, UserControllerService userService) {
         this.basketService = basketService;
         this.productService = productService;
         this.userService = userService;
@@ -41,6 +42,7 @@ public class WebShopController {
         tesztproducts.add(new Product(2L, "Tej", 200));
         tesztproducts.add(new Product(1L, "Kenyér", 500));
         products = tesztproducts;
+        validator = new InputValidator();
     }
 
     public void menu() {

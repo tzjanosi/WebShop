@@ -43,7 +43,7 @@ public class Main {
 //        System.out.println("Login (NOK):"+userService.loginUser("Fehervirag@freemail.hu", "pass87word"));
 //        System.out.println("Login (NOK):"+userService.loginUser("Fehervrag@freemail.hu", "pass987word"));
 
-        WebShopController webShopController = new WebShopController((BasketService) basketService, (ProductService) productService, (UserService) userService);
+        WebShopController webShopController = new WebShopController(basketService, productService,userService);
         webShopController.menu();
 
     }
