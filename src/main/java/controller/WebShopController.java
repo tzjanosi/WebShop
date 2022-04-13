@@ -207,12 +207,11 @@ public class WebShopController {
         }
     }
 
-    private void resultOfRegistration(Optional<User> user) {
-        if (user.isEmpty()) {
-            System.out.println("Az e-mail cím már regisztrálva van!");
+    private void resultOfRegistration(boolean resultOfR) {
+        if (registration()) {
+            System.out.println("Regisztráció sikeres, kérem jelentkezzen be!");
         } else {
-            actualOrder = new Basket(user.get());
-            System.out.println("Üdvözlöm a WebShop-ban!");
+            System.out.println("A regisztráció sikertelen!");
         }
     }
 
@@ -220,7 +219,6 @@ public class WebShopController {
         if (user.isEmpty()) {
             System.out.println("Hibás e-mail cím vagy jelszó!");
         } else {
-            //basket id?
             actualOrder = new Basket(user.get());
             System.out.println("Üdvözlöm a WebShop-ban!");
         }
@@ -235,7 +233,7 @@ public class WebShopController {
 
     }
 
-    private Optional<User> registration() {
+    private boolean registration() {
         String emailAddress = getEmailAddress();
         String password = getPassword();
         return userService.registerUser(emailAddress, password);
@@ -270,7 +268,7 @@ public class WebShopController {
             email = sc.nextLine();
             valid = isPasswordValid(email);
             if (!valid) {
-                System.out.println("Érvénytelen password!");
+                System.out.println("Érvénytelen jelszó!");
             }
         }
         return email;
