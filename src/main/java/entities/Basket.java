@@ -1,6 +1,6 @@
 package entities;
 
-import validators.BoughtProductValidator;
+import validators.BasketValidator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class Basket {
     }
 
     public void removeProduct(Product product) {
-        new BoughtProductValidator().validateProductInBasket(products, product);
+        new BasketValidator().validateProductInBasket(products, product);
         products.remove(product);
     }
 

@@ -2,30 +2,28 @@ package service;
 
 import controller.ProductControllerService;
 import entities.Product;
-import repositories.ProductRepository;
 
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
 public class ProductService implements ProductControllerService {
 
-    private ProductRepository productRepository;
+    private ProductServiceRepository productServiceRepository;
 
-    public ProductService(DataSource dataSource) {
-        this.productRepository = new ProductRepository(dataSource);
+    public ProductService(ProductServiceRepository productServiceRepository) {
+        this.productServiceRepository = productServiceRepository;
     }
 
     @Override
     public List<Product> createListOfProducts() {
-        return null;
+        return productServiceRepository.getAllProducts();
     }
 
     public void insertProduct(Product product) {
         if (findProductByName(product.getName()).isPresent()) {
             throw new IllegalArgumentException(product.getName() + " had already added to the database!");
         }
-        productRepository.saveProduct(product);
+        productServiceRepository.saveProduct(product);
     }
 
     @Override
@@ -34,6 +32,6 @@ public class ProductService implements ProductControllerService {
     }
 
     public Optional<Product> findProductByName(String name) {
-        return productRepository.findProductByName(name);
+        return productServiceRepository.findProductByName(name);
     }
 }

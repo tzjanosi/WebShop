@@ -2,18 +2,17 @@ package service;
 
 import controller.BasketControllerService;
 import entities.Basket;
-import repositories.BasketRepository;
 
 public class BasketService implements BasketControllerService {
 
-    private BasketRepository basketRepository;
+    private BasketServiceRepository basketServiceRepository;
 
-    public BasketService(BasketRepository basketRepository) {
-        this.basketRepository = basketRepository;
+    public BasketService(BasketServiceRepository basketServiceRepository) {
+        this.basketServiceRepository = basketServiceRepository;
     }
 
     @Override
     public boolean saveOrder(Basket basket) {
-        return false;
+        return basketServiceRepository.saveOrder(basket);
     }
 }
