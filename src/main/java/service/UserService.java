@@ -23,7 +23,7 @@ public class UserService {
             throw new IllegalArgumentException("Email: '" + email + "' had been registered!");
         }
         validator.validateRegistration(email, password);
-        userRepository.insertUser(new User(email, password));
+        userRepository.saveUser(new User(email, password));
     }
 
     public boolean loginUser(String email, String password) {

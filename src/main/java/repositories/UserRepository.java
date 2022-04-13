@@ -16,7 +16,7 @@ public class UserRepository {
         jdbcTemplate =new JdbcTemplate(dataSource);
     }
 
-    public void insertUser(User user) {
+    public void saveUser(User user) {
     }
 
     public Optional<User> findUserByEmail(String email) {

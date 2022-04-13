@@ -15,7 +15,7 @@ public class ProductRepository {
         jdbcTemplate =new JdbcTemplate(dataSource);
     }
 
-    public void insertProduct(Product product) {
+    public void saveProduct(Product product) {
     }
 
     public Optional<Product> findProductByName(String name) {

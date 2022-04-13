@@ -18,7 +18,7 @@ public class ProductService {
         if (findProductByName(product.getName()).isPresent()) {
             throw new IllegalArgumentException(product.getName() + " had already added to the database!");
         }
-        productRepository.insertProduct(product);
+        productRepository.saveProduct(product);
     }
 
     public void insertMultipleProducts(List<Product> products) {

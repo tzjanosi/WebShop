@@ -1,17 +1,17 @@
 package entities;
 
-import validators.BasketValidator;
+import validators.BoughtProductValidator;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Basket {
+public class BoughtProduct {
 
     private final Long id;
     private final User user;
     private Map<Product, Integer> products = new HashMap<>();
 
-    public Basket(Long id, User user) {
+    public BoughtProduct(Long id, User user) {
         this.id = id;
         this.user = user;
     }
@@ -24,7 +24,7 @@ public class Basket {
     }
 
     public void removeProduct(Product product) {
-        new BasketValidator().validateProductInBasket(products, product);
+        new BoughtProductValidator().validateProductInBasket(products, product);
         products.remove(product);
     }
 

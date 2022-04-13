@@ -33,31 +33,93 @@ Repo for the teamwork
 - email (String)
 - password hash(Long)
 
+
+- User(String email, String password)
+- User(Long id, String email, int password)
+- getters & setters
+
 ## Product
 - id (Long)
 - name (String)
 - price (int)
 
+
+- Product(String name, int price)
+- Product(Long id, String name, int price)
+- getters
+
+## BoughtProduct
+- id (Long)
+- user(User)
+- products (Map<Product,Integer>)
+
+
+- BoughtProduct(Long id, User user)
+- void addProduct(Product product)
+- void removeProduct(Product product)
+- getters
+
+
 # Repository layer
 
-## UserDAO
+## UserRepository
 
-- saveUser()
-- findUserByEmail()
+- void saveUser(User user)
+- Optional<User> findUserByEmail(String email)
 
-## ProductDAO
+## ProductRepository
 
-- saveProduct()
-- findProductByName()
+- void saveProduct(Product product)
+- Optional<Product> findProductByName(String name)
 
-## BuyingDAO
+## BoughtProductRepository
 
-- saveBuying()
-- findBuyingById()
-
-## BasketDAO
-
-- saveBasket()
-- findProductsByBuyingId()
+- _saveBuying()_
+- _findBuyingById()_
 
 # Service
+
+## BoughtProductService
+
+- BoughtProductRepository boughtProductRepository
+
+
+- BoughtProductService(BoughtProductRepository boughtProductRepository)
+
+## ProductService
+
+- ProductRepository productRepository
+
+
+- ProductService(ProductRepository productRepository)
+- void insertProduct(Product product)
+- void insertMultipleProducts(List<Product> products)
+- Optional<Product> findProductByName(String name)
+
+
+## UserService
+
+- UserRepository userRepository;
+- UserValidator validator;
+
+
+- UserService(UserRepository userRepository)
+- void registerUser(String email, String password)
+- boolean loginUser(String email, String password)
+
+
+# Validators
+
+## BoughtProductValidator
+
+- void validateProductInBasket(Map<Product, Integer> products, Product product)
+
+## UserValidator
+
+- UserValidator(UserRepository userRepository)
+
+
+- UserValidator(UserRepository userRepository)
+- void validateRegistration(String email, String password)
+- boolean checkIfUserExists(String email)
+
