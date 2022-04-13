@@ -20,9 +20,9 @@ public class ProductService implements ProductControllerService {
     }
 
     public void insertProduct(Product product) {
-        if (findProductByName(product.getName()).isPresent()) {
-            throw new IllegalArgumentException(product.getName() + " had already added to the database!");
-        }
+//        if (findProductByName(product.getName()).isPresent()) {
+//            throw new IllegalArgumentException(product.getName() + " had already added to the database!");
+//        }
         productServiceRepository.saveProduct(product);
     }
 
