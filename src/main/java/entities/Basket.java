@@ -7,9 +7,13 @@ import java.util.Map;
 
 public class Basket {
 
-    private final Long id;
+    private Long id;
     private final User user;
     private Map<Product, Integer> products = new HashMap<>();
+
+    public Basket(User user) {
+        this.user = user;
+    }
 
     public Basket(Long id, User user) {
         this.id = id;
