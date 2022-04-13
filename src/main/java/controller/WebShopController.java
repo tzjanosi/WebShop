@@ -17,13 +17,13 @@ public class WebShopController {
 
     private static final String PATH_OF_PRODUCTS = "src/main/resources/products.txt";
 
+    private static final List<String> YES_NO_ANSWERS = Arrays.asList("y", "yes", "i", "igen", "n", "no", "nem");
+
     private BasketService basketService;
 
     private ProductService productService;
 
     private UserService userService;
-
-    private User actualUser;
 
     private Basket actualOrder;
 
@@ -33,17 +33,24 @@ public class WebShopController {
         this.basketService = basketService;
         this.productService = productService;
         this.userService = userService;
-        fillProductsIntoDB();
-        products = productService.createListOfProducts();
+//        fillProductsIntoDB();
+//        products = productService.createListOfProducts();
+        //teszthez
+        List<Product> tesztproducts = new ArrayList<>();
+        tesztproducts.add(new Product(1L, "Vaj", 300));
+        tesztproducts.add(new Product(2L, "Tej", 200));
+        tesztproducts.add(new Product(1L, "Kenyér", 500));
+        products = tesztproducts;
     }
 
     public void menu() {
         int numberOfOptions;
         int option;
         do {
+//            System.out.print("Felhasználó: ");
+//            printActualOrder();
             numberOfOptions = printUserMenu();
             option = getOptionNumber(numberOfOptions);
-            System.out.println(option);
             processOption(option);
         } while (option != numberOfOptions);
     }
@@ -60,6 +67,14 @@ public class WebShopController {
         options.add("Kilépés a WebShop-ból");
         System.out.println("Menü: ");
         return printListOfOptions(options);
+    }
+
+    private void printActualUser() {
+        if (actualOrder.getUser() == null) {
+            System.out.println("NINCS BEJELENTKEZETT FELHASzNÁLÓ!");
+        } else {
+            System.out.println(actualOrder.getUser().getEmail());
+        }
     }
 
     private int getOptionNumber(int optionNumbers) {
@@ -86,16 +101,67 @@ public class WebShopController {
                 addProductToOrder();
                 return;
             case 3:
+                removeProductFromOrder();
                 return;
             case 4:
+                growsOrderedProductAmount();
                 return;
             case 5:
+                saveOrder();
                 return;
             case 6:
                 refreshProducts();
                 return;
         }
 
+    }
+
+    private void saveOrder() {
+        printActualOrder();
+        System.out.println("Biztos a vásárlásban?");
+        boolean trustedOrder = askSaveOrder();
+        if (trustedOrder) {
+            basketService.saveOrder(actualOrder);
+        }
+    }
+
+    private boolean askSaveOrder() {
+        Scanner sc = new Scanner(System.in);
+        String answer = sc.nextLine();
+        if (YES_NO_ANSWERS.contains(answer.toLowerCase())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void growsOrderedProductAmount() {
+        printActualOrder();
+        List<String> options = actualOrder.getProducts().keySet().stream()
+                .map(product -> product.getName() + ", " + product.getPrice() + "Ft")
+                .toList();
+        int numberOfProducts = printListOfOptions(options);
+        System.out.print("Melyik termékből szeretne többet vásárolni? ");
+        int indexOfProduct = getOptionNumber(numberOfProducts) - 1;
+        Product product = products.get(indexOfProduct);
+        System.out.print("Mennyivel növeli a vásárolt mennyiséget? ");
+        Scanner sc = new Scanner(System.in);
+        int amount = sc.nextInt();
+        actualOrder.addProduct(product, amount);
+        actualOrder.removeProduct(product);
+
+    }
+
+    private void removeProductFromOrder() {
+        printActualOrder();
+        List<String> options = actualOrder.getProducts().keySet().stream()
+                .map(product -> product.getName() + ", " + product.getPrice() + "Ft")
+                .toList();
+        int numberOfProducts = printListOfOptions(options);
+        System.out.print("Melyik termébket szeretné törölni? ");
+        int indexOfProduct = getOptionNumber(numberOfProducts) - 1;
+        Product product = products.get(indexOfProduct);
+        actualOrder.removeProduct(product);
     }
 
     private void refreshProducts() {
@@ -113,28 +179,28 @@ public class WebShopController {
         printActualOrder();
         System.out.println("A vásárolható termékek listája: ");
         List<String> options = products.stream()
-                .map(product -> product.getName() + "egységár" + product.getPrice())
+                .map(product -> product.getName() + ", " + product.getPrice() + "Ft")
                 .toList();
-        int option = printListOfOptions(options);
+        int numberOfProducts = printListOfOptions(options);
+        System.out.print("Melyik terméből szeretne vásárolni? ");
+        int indexOfProduct = getOptionNumber(numberOfProducts) - 1;
+        Product product = products.get(indexOfProduct);
         System.out.print("Várásolni kívánt mennyiség: ");
         Scanner sc = new Scanner(System.in);
         int amount = sc.nextInt();
-        actualOrder.addProduct(products.get(option), amount);
+        actualOrder.addProduct(product, amount);
     }
 
     public void loginOrRegistration() {
         List<String> options = Arrays.asList("Belépés", "Regisztráció");
         printListOfOptions(options);
         int option = getOptionNumber(options.size());
-        Optional<User> user = Optional.empty();
         switch (option) {
             case 1:
-                user = login();
-                resultOfLogin(user);
+                resultOfLogin(login());
                 return;
             case 2:
-                user = registration();
-                resultOfRegistration(user);
+                resultOfRegistration(registration());
                 return;
         }
     }
@@ -143,9 +209,7 @@ public class WebShopController {
         if (user.isEmpty()) {
             System.out.println("Az e-mail cím már regisztrálva van!");
         } else {
-            actualUser = user.get();
-            // Basket id?
-            actualOrder = new Basket(1L, actualUser);
+            actualOrder = new Basket(user.get());
             System.out.println("Üdvözlöm a WebShop-ban!");
         }
     }
@@ -154,9 +218,8 @@ public class WebShopController {
         if (user.isEmpty()) {
             System.out.println("Hibás e-mail cím vagy jelszó!");
         } else {
-            actualUser = user.get();
             //basket id?
-            actualOrder = new Basket(1L, actualUser);
+            actualOrder = new Basket(user.get());
             System.out.println("Üdvözlöm a WebShop-ban!");
         }
     }
@@ -217,12 +280,14 @@ public class WebShopController {
     }
 
     private void printActualOrder() {
-        System.out.printf("Vásárló: %s", actualUser.getEmail());
+        printActualUser();
         System.out.println("Vásárolt termékek:");
         if (actualOrder.getProducts().isEmpty()) {
-            System.out.println("Nincs még termék a rendelésben!");
+            System.out.println("Nincs még termék a rendelésben!\n");
         } else {
-            actualOrder.getProducts().forEach((product, amount) -> System.out.printf("%s: %dFt",product, amount));
+            actualOrder.getProducts()
+                    .forEach((product, amount) -> System.out.printf("%s: mennyiség: %d, ár: %dFt\n", product.getName(), amount, amount * product.getPrice()));
+            System.out.println();
         }
     }
 
