@@ -16,9 +16,10 @@ public class UserRepository {
         jdbcTemplate =new JdbcTemplate(dataSource);
     }
 
-    public void saveUser(User userToSave) {
+    public Optional<User> saveUser(User userToSave) {
         jdbcTemplate.update("INSERT INTO users (email,pass,name) VALUES(?,?,?);",userToSave.getEmail(), userToSave.getPassword(),"");
 //        jdbcTemplate.update("INSERT INTO users (email,pass,name) VALUES(?,?,?);",userToSave.getEmail(), userToSave.password(),userToSave.getName());
+        return Optional.empty();
     }
 
     public Optional<User> findUserByEmail(String email) {

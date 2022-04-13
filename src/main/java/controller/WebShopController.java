@@ -1,8 +1,8 @@
 package controller;
 
-import entities.BoughtProduct;
+import entities.Basket;
 import entities.User;
-import service.BoughtProductService;
+import service.BasketService;
 import service.ProductService;
 import service.UserService;
 
@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 public class WebShopController {
 
-    private BoughtProductService boughtProductService;
+    private BasketService basketService;
 
     private ProductService productService;
 
@@ -21,10 +21,10 @@ public class WebShopController {
 
     private User actualUser;
 
-    private BoughtProduct actualOrder;
+    private Basket actualOrder;
 
-    public WebShopController(BoughtProductService boughtProductService, ProductService productService, UserService userService) {
-        this.boughtProductService = boughtProductService;
+    public WebShopController(BasketService basketService, ProductService productService, UserService userService) {
+        this.basketService = basketService;
         this.productService = productService;
         this.userService = userService;
     }
