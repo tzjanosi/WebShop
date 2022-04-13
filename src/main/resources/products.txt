@@ -1,0 +1,5 @@
+vaj;400
+WC papír;800
+Csoki;300
+Kenyér;600
+Tej;398

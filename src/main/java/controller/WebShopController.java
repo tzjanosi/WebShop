@@ -1,17 +1,24 @@
 package controller;
 
 import entities.BoughtProduct;
+import entities.Product;
 import entities.User;
 import service.BoughtProductService;
 import service.ProductService;
 import service.UserService;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class WebShopController {
+
+    private static final String PATH_PRODUCTS = "src/main/resources/products.txt";
 
     private BoughtProductService boughtProductService;
 
@@ -23,10 +30,14 @@ public class WebShopController {
 
     private BoughtProduct actualOrder;
 
+    private List<Product> products;
+
     public WebShopController(BoughtProductService boughtProductService, ProductService productService, UserService userService) {
         this.boughtProductService = boughtProductService;
         this.productService = productService;
         this.userService = userService;
+        //fileból
+//        products = productService.insertMultipleProducts(null);
     }
 
     //teszt
@@ -77,6 +88,7 @@ public class WebShopController {
         switch (optionNumber) {
             case 1:
                 //még a regisztrációt kezelni
+                System.out.println("Login:");
                 Scanner sc = new Scanner(System.in);
                 System.out.print("Email: ");
                 String emailAddress = sc.nextLine();
@@ -94,6 +106,7 @@ public class WebShopController {
                 }
                 return;
             case 2:
+
                 return;
             case 3:
                 return;
@@ -102,6 +115,16 @@ public class WebShopController {
             case 5:
                 return;
             case 6:
+                try (BufferedReader br = Files.newBufferedReader(Path.of(PATH_PRODUCTS))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        String[] parts = line.split(";");
+                        products.add(new Product(parts[0], Integer.parseInt(parts[1])));
+                    }
+                } catch (IOException ioException) {
+                    throw new IllegalStateException("Cannot read products");
+                }
+                products.forEach(System.out::println);
                 return;
         }
     }
