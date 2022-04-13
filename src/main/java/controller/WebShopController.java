@@ -3,8 +3,6 @@ package controller;
 import entities.Basket;
 import entities.Product;
 import entities.User;
-import service.ProductService;
-import service.UserService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,11 +35,11 @@ public class WebShopController {
         fillProductsIntoDB();
         products = productService.createListOfProducts();
         //teszthez
-        List<Product> tesztproducts = new ArrayList<>();
-        tesztproducts.add(new Product(1L, "Vaj", 300));
-        tesztproducts.add(new Product(2L, "Tej", 200));
-        tesztproducts.add(new Product(1L, "Kenyér", 500));
-        products = tesztproducts;
+//        List<Product> tesztproducts = new ArrayList<>();
+//        tesztproducts.add(new Product(1L, "Vaj", 300));
+//        tesztproducts.add(new Product(2L, "Tej", 200));
+//        tesztproducts.add(new Product(1L, "Kenyér", 500));
+//        products = tesztproducts;
         validator = new InputValidator();
     }
 
@@ -49,8 +47,7 @@ public class WebShopController {
         int numberOfOptions;
         int option;
         do {
-//            System.out.print("Felhasználó: ");
-//            printActualOrder();
+            printActualOrder();
             numberOfOptions = printUserMenu();
             option = getOptionNumber(numberOfOptions);
             processOption(option);
@@ -72,11 +69,7 @@ public class WebShopController {
     }
 
     private void printActualUser() {
-        if (actualOrder.getUser() == null) {
-            System.out.println("NINCS BEJELENTKEZETT FELHASzNÁLÓ!");
-        } else {
-            System.out.println(actualOrder.getUser().getEmail());
-        }
+
     }
 
     private int getOptionNumber(int optionNumbers) {
@@ -156,13 +149,14 @@ public class WebShopController {
 
     private void removeProductFromOrder() {
         printActualOrder();
-        List<String> options = actualOrder.getProducts().keySet().stream()
+        List<Product> orderedProduct = actualOrder.getProducts().keySet().stream().toList();
+        List<String> options = orderedProduct.stream()
                 .map(product -> product.getName() + ", " + product.getPrice() + "Ft")
                 .toList();
         int numberOfProducts = printListOfOptions(options);
         System.out.print("Melyik termébket szeretné törölni? ");
         int indexOfProduct = getOptionNumber(numberOfProducts) - 1;
-        Product product = products.get(indexOfProduct);
+        Product product = orderedProduct.get(indexOfProduct);
         actualOrder.removeProduct(product);
     }
 
@@ -173,7 +167,6 @@ public class WebShopController {
         List<String> options = products.stream()
                 .map(product -> product.getName() + "egységár" + product.getPrice())
                 .toList();
-        products.forEach(System.out::println);
     }
 
     //itt lehetne szűrni hogy ami már bent van azt ne írja ki újra
@@ -202,13 +195,14 @@ public class WebShopController {
                 resultOfLogin(login());
                 return;
             case 2:
-                resultOfRegistration(registration());
+                boolean result = registration();
+                resultOfRegistration(result);
                 return;
         }
     }
 
-    private void resultOfRegistration(boolean resultOfR) {
-        if (registration()) {
+    private void resultOfRegistration(boolean result) {
+        if (result) {
             System.out.println("Regisztráció sikeres, kérem jelentkezzen be!");
         } else {
             System.out.println("A regisztráció sikertelen!");
@@ -279,14 +273,19 @@ public class WebShopController {
     }
 
     private void printActualOrder() {
-        printActualUser();
-        System.out.println("Vásárolt termékek:");
-        if (actualOrder.getProducts().isEmpty()) {
-            System.out.println("Nincs még termék a rendelésben!\n");
+        System.out.print("Felhasználó: ");
+        if (actualOrder == null) {
+            System.out.println("NINCS BEJELENTKEZETT FELHASzNÁLÓ!");
         } else {
-            actualOrder.getProducts()
-                    .forEach((product, amount) -> System.out.printf("%s: mennyiség: %d, ár: %dFt\n", product.getName(), amount, amount * product.getPrice()));
-            System.out.println();
+            System.out.println(actualOrder.getUser().getEmail());
+            System.out.println("Vásárolt termékek:");
+            if (actualOrder.getProducts().isEmpty()) {
+                System.out.println("Nincs még termék a rendelésben!\n");
+            } else {
+                actualOrder.getProducts()
+                        .forEach((product, amount) -> System.out.printf("%s: mennyiség: %d, ár: %dFt\n", product.getName(), amount, amount * product.getPrice()));
+                System.out.println();
+            }
         }
     }
 

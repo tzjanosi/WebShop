@@ -24,8 +24,13 @@ public class ProductRepository implements ProductServiceRepository {
     }
 
     @Override
+    //csak hogy tudjak tesztelni
     public List<Product> getAllProducts() {
-        return null;
+        return jdbcTemplate.query("select * from product",
+                (rs, rowNum) -> new Product(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getInt("price")));
     }
 
     @Override

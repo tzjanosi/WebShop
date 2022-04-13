@@ -30,6 +30,10 @@ public class Basket {
         products.remove(product);
     }
 
+    public void resetBasket() {
+        products = new HashMap<>();
+    }
+
     public Long getId() {
         return id;
     }
