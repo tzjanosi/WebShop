@@ -17,6 +17,7 @@ public class ProductRepository implements ProductServiceRepository {
         jdbcTemplate =new JdbcTemplate(dataSource);
     }
 
+    @Override
     public void saveProduct(Product productToSave) {
         jdbcTemplate.update("INSERT INTO product (name,price,amount) VALUES(?,?,?);",productToSave.getName(), productToSave.getPrice(),0);
 //        jdbcTemplate.update("INSERT INTO product (name,price,amount) VALUES(?,?,?);",productToSave.getName(), productToSave.getPrice(),productToSave.getAmount());
@@ -24,13 +25,8 @@ public class ProductRepository implements ProductServiceRepository {
     }
 
     @Override
-    //csak hogy tudjak tesztelni
     public List<Product> getAllProducts() {
-        return jdbcTemplate.query("select * from product",
-                (rs, rowNum) -> new Product(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getInt("price")));
+        return jdbcTemplate.query("SELECT * FROM product ORDER BY id DESC", new ProductMapper());
     }
 
     @Override
@@ -43,7 +39,9 @@ public class ProductRepository implements ProductServiceRepository {
     }
 
     @Override
-    public void insertProduct(Product vaj) {
+    public void insertProduct(Product productToSave) {
+        jdbcTemplate.update("INSERT INTO product (name,price,amount) VALUES(?,?,?);",productToSave.getName(), productToSave.getPrice(),0);
+//        jdbcTemplate.update("INSERT INTO product (name,price,amount) VALUES(?,?,?);",productToSave.getName(), productToSave.getPrice(),productToSave.getAmount());
 
     }
 }

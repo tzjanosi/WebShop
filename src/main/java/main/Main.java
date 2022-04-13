@@ -17,7 +17,7 @@ public class Main {
         DBSource dbSource = new DBSource("/webshop.properties");
         MariaDbDataSource dataSource = dbSource.getDataSource();
 
-        BasketServiceRepository basketRepository = new BasketRepository();
+        BasketServiceRepository basketRepository = new BasketRepository(dataSource);
         ProductServiceRepository productRepository = new ProductRepository(dataSource);
         UserServiceRepository userRepository = new UserRepository(dataSource);
 

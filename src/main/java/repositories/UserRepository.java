@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import service.UserServiceRepository;
 
 import javax.sql.DataSource;
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
