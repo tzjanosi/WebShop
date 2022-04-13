@@ -3,13 +3,14 @@ package repositories;
 import entities.User;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import service.UserServiceRepository;
 
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class UserRepository {
+public class UserRepository implements UserServiceRepository {
     private JdbcTemplate jdbcTemplate;
 
     public UserRepository(DataSource dataSource) {
