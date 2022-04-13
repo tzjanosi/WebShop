@@ -32,7 +32,7 @@ public class Main {
         productRepository.insertProduct(new Product("Kenyér", 600));
         productRepository.insertProduct(new Product("Tej", 398));
 
-        System.out.println(productRepository.findProductByName("Kenyér").get());
+//        System.out.println(productRepository.findProductByName("Kenyér").get());
 
 
         userService.registerUser("kisrozal@gmail.com", "password");
