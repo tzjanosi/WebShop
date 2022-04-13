@@ -17,11 +17,11 @@ public class UserService implements UserControllerService {
     }
 
     @Override
-    public Optional<User> registerUser(String email, String password) {
+    public boolean registerUser(String email, String password) {
         email = email.strip();
         password = password.strip();
         if (validator.checkIfUserExists(email)) {
-            return Optional.empty();
+            return false;
         }
         validator.validateRegistration(email, password);
         return userServiceRepository.saveUser(new User(email, password));

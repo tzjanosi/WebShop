@@ -17,10 +17,10 @@ public class UserRepository implements UserServiceRepository {
         jdbcTemplate =new JdbcTemplate(dataSource);
     }
 
-    public Optional<User> saveUser(User userToSave) {
+    public boolean saveUser(User userToSave) {
         jdbcTemplate.update("INSERT INTO users (email,pass,name) VALUES(?,?,?);",userToSave.getEmail(), userToSave.getPassword(),"");
 //        jdbcTemplate.update("INSERT INTO users (email,pass,name) VALUES(?,?,?);",userToSave.getEmail(), userToSave.password(),userToSave.getName());
-        return Optional.empty();
+        return true;
     }
 
     public Optional<User> findUserByEmail(String email) {

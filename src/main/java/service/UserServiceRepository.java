@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface UserServiceRepository {
     Optional<User> findUserByEmail(String email);
 
-    Optional<User> saveUser(User user);
+    boolean saveUser(User user);
 }
