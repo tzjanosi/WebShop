@@ -1,3 +1,4 @@
+import controller.WebShopController;
 import entities.Product;
 import org.mariadb.jdbc.MariaDbDataSource;
 import repositories.DBSource;
@@ -30,6 +31,8 @@ public class Main {
         System.out.println("Login (OK):"+userService.loginUser("Fehervirag@freemail.hu", "pass987word"));
 //        System.out.println("Login (NOK):"+userService.loginUser("Fehervirag@freemail.hu", "pass87word"));
 //        System.out.println("Login (NOK):"+userService.loginUser("Fehervrag@freemail.hu", "pass987word"));
+        WebShopController webShopController= new WebShopController();
+        webShopController.menu();
 
     }
 }
