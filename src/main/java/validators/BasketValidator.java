@@ -4,7 +4,7 @@ import entities.Product;
 
 import java.util.Map;
 
-public class BoughtProductValidator {
+public class BasketValidator {
 
     public void validateProductInBasket(Map<Product, Integer> products, Product product) {
         if (!products.containsKey(product)) {

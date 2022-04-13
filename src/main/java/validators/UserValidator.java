@@ -1,13 +1,13 @@
 package validators;
 
-import repositories.UserRepository;
+import service.UserServiceRepository;
 
 public class UserValidator {
 
-    private UserRepository userRepository;
+    private UserServiceRepository userServiceRepository;
 
-    public UserValidator(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserValidator(UserServiceRepository userServiceRepository) {
+        this.userServiceRepository = userServiceRepository;
     }
 
     public void validateRegistration(String email, String password) {
@@ -42,6 +42,6 @@ public class UserValidator {
     }
 
     public boolean checkIfUserExists(String email) {
-        return userRepository.findUserByEmail(email).isPresent();
+        return userServiceRepository.findUserByEmail(email).isPresent();
     }
 }

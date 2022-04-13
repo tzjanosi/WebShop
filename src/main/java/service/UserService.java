@@ -2,20 +2,18 @@ package service;
 
 import controller.UserControllerService;
 import entities.User;
-import repositories.UserRepository;
 import validators.UserValidator;
 
-import javax.sql.DataSource;
 import java.util.Optional;
 
 public class UserService implements UserControllerService {
 
-    private UserRepository userRepository;
+    private UserServiceRepository userServiceRepository;
     private UserValidator validator;
 
-    public UserService(DataSource dataSource) {
-        this.userRepository = new UserRepository(dataSource);
-        this.validator = new UserValidator(userRepository);
+    public UserService(UserServiceRepository userServiceRepository) {
+        this.userServiceRepository = userServiceRepository;
+        this.validator = new UserValidator(userServiceRepository);
     }
 
     @Override
@@ -26,12 +24,12 @@ public class UserService implements UserControllerService {
             return Optional.empty();
         }
         validator.validateRegistration(email, password);
-        return userRepository.saveUser(new User(email, password));
+        return userServiceRepository.saveUser(new User(email, password));
     }
 
     @Override
     public Optional<User> loginUser(String email, String password) {
-        Optional<User> optionalUser = userRepository.findUserByEmail(email);
+        Optional<User> optionalUser = userServiceRepository.findUserByEmail(email);
         if (optionalUser.isEmpty()) {
             return optionalUser;
         }
