@@ -5,14 +5,13 @@ import entities.User;
 import org.mariadb.jdbc.MariaDbDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.Optional;
 
 public class UserRepository {
     private JdbcTemplate jdbcTemplate;
 
-    public UserRepository() {
-        DBSource dbSource= new DBSource("/webshop.properties");
-        MariaDbDataSource dataSource= dbSource.getDataSource();
+    public UserRepository(DataSource dataSource) {
         jdbcTemplate =new JdbcTemplate(dataSource);
     }
 

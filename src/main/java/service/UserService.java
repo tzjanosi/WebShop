@@ -4,6 +4,7 @@ import entities.User;
 import repositories.UserRepository;
 import validators.UserValidator;
 
+import javax.sql.DataSource;
 import java.util.Optional;
 
 public class UserService {
@@ -11,8 +12,8 @@ public class UserService {
     private UserRepository userRepository;
     private UserValidator validator;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(DataSource dataSource) {
+        this.userRepository = new UserRepository(dataSource);
         this.validator = new UserValidator(userRepository);
     }
 

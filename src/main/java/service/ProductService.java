@@ -3,6 +3,7 @@ package service;
 import entities.Product;
 import repositories.ProductRepository;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,8 +11,8 @@ public class ProductService {
 
     private ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(DataSource dataSource) {
+        this.productRepository = new ProductRepository(dataSource);
     }
 
     public void insertProduct(Product product) {
