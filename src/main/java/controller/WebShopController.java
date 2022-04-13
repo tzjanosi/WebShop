@@ -34,8 +34,8 @@ public class WebShopController {
         this.basketService = basketService;
         this.productService = productService;
         this.userService = userService;
-//        fillProductsIntoDB();
-//        products = productService.createListOfProducts();
+        fillProductsIntoDB();
+        products = productService.createListOfProducts();
         //teszthez
         List<Product> tesztproducts = new ArrayList<>();
         tesztproducts.add(new Product(1L, "Vaj", 300));
@@ -238,7 +238,6 @@ public class WebShopController {
     private Optional<User> registration() {
         String emailAddress = getEmailAddress();
         String password = getPassword();
-        userService.loginUser(emailAddress, password);
         return userService.registerUser(emailAddress, password);
     }
 
