@@ -64,18 +64,18 @@ Repo for the teamwork
 
 ## UserRepository
 
-- void saveUser(User user)
-- Optional<User> findUserByEmail(String email)
+- _void saveUser(User user)_
+- _Optional<User> findUserByEmail(String email)_
 
 ## ProductRepository
 
-- void saveProduct(Product product)
-- Optional<Product> findProductByName(String name)
+- _void saveProduct(Product product)_
+- _Optional<Product> findProductByName(String name)_
 
 ## BoughtProductRepository
 
-- _saveBuying()_
-- _findBuyingById()_
+- __saveBuying()__
+- __findBuyingById()__
 
 # Service
 
