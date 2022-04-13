@@ -36,4 +36,9 @@ public class ProductRepository implements ProductServiceRepository {
         }
         return Optional.of(result.get(0));
     }
+
+    @Override
+    public void insertProduct(Product vaj) {
+
+    }
 }
