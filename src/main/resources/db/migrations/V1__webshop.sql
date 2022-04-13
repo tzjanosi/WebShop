@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `users` (
   `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `email` VARCHAR(255) COLLATE utf8mb3_hungarian_ci NOT NULL,
+  `email` VARCHAR(255) UNIQUE COLLATE utf8mb3_hungarian_ci NOT NULL,
   `pass` BIGINT NOT NULL,
   `name` VARCHAR(255) COLLATE utf8mb3_hungarian_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3  COLLATE utf8mb3_hungarian_ci;
