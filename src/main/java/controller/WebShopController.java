@@ -14,8 +14,6 @@ public class WebShopController {
 
     private static final String PATH_OF_PRODUCTS = "src/main/resources/products.txt";
 
-    private static final List<String> YES_NO_ANSWERS = Arrays.asList("y", "yes", "i", "igen", "n", "no", "nem");
-
     private BasketControllerService basketService;
 
     private ProductControllerService productService;
@@ -34,262 +32,10 @@ public class WebShopController {
         this.userService = userService;
         fillProductsIntoDB();
         products = productService.createListOfProducts();
-        //teszthez
-//        List<Product> tesztproducts = new ArrayList<>();
-//        tesztproducts.add(new Product(1L, "Vaj", 300));
-//        tesztproducts.add(new Product(2L, "Tej", 200));
-//        tesztproducts.add(new Product(1L, "Kenyér", 500));
-//        products = tesztproducts;
         validator = new InputValidator();
     }
 
-    public void menu() {
-        int numberOfOptions;
-        int option;
-        do {
-            printActualOrder();
-            numberOfOptions = printUserMenu();
-            option = getOptionNumber(numberOfOptions);
-            processOption(option);
-        } while (option != numberOfOptions);
-    }
-
-    //majd enum-ra átalakítani
-    private int printUserMenu() {
-        List<String> options = new ArrayList<>();
-        options.add("Felhasználó regisztráció/bejelentkezés");
-        options.add("Termékek belehelyezése a vásárló kosarába");
-        options.add("Termék kivétele vásárló kosarából");
-        options.add("Termék mennyiség növelése");
-        options.add("Rendelés leadása");
-        options.add("Termékek listázása/betöltése fájlból");
-        options.add("Kilépés a WebShop-ból");
-        System.out.println("Menü: ");
-        return printListOfOptions(options);
-    }
-
-    private void printActualUser() {
-
-    }
-
-    private int getOptionNumber(int optionNumbers) {
-        System.out.print("Kérem a választott menüpont számát: ");
-        Scanner sc = new Scanner(System.in);
-        //int option = getNumberFrom console();
-        return sc.nextInt();
-    }
-
-    private int printListOfOptions(List<String> options) {
-        for (int i = 1; i <= options.size(); i++) {
-            System.out.printf("%2d %s\n", i, options.get(i - 1));
-        }
-        return options.size();
-    }
-
-    private void processOption(int optionNumber) {
-        //kiszervezni metódusokba
-        switch (optionNumber) {
-            case 1:
-                loginOrRegistration();
-                return;
-            case 2:
-                addProductToOrder();
-                return;
-            case 3:
-                removeProductFromOrder();
-                return;
-            case 4:
-                growsOrderedProductAmount();
-                return;
-            case 5:
-                saveOrder();
-                return;
-            case 6:
-                refreshProducts();
-                return;
-        }
-
-    }
-
-    private void saveOrder() {
-        printActualOrder();
-        System.out.println("Biztos a vásárlásban?");
-        boolean trustedOrder = askSaveOrder();
-        if (trustedOrder) {
-            basketService.saveOrder(actualOrder);
-        }
-    }
-
-    private boolean askSaveOrder() {
-        Scanner sc = new Scanner(System.in);
-        String answer = sc.nextLine();
-        if (YES_NO_ANSWERS.contains(answer.toLowerCase())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void growsOrderedProductAmount() {
-        printActualOrder();
-        List<String> options = actualOrder.getProducts().keySet().stream()
-                .map(product -> product.getName() + ", " + product.getPrice() + "Ft")
-                .toList();
-        int numberOfProducts = printListOfOptions(options);
-        System.out.print("Melyik termékből szeretne többet vásárolni? ");
-        int indexOfProduct = getOptionNumber(numberOfProducts) - 1;
-        Product product = products.get(indexOfProduct);
-        System.out.print("Mennyivel növeli a vásárolt mennyiséget? ");
-        Scanner sc = new Scanner(System.in);
-        int amount = sc.nextInt();
-        actualOrder.addProduct(product, amount);
-        actualOrder.removeProduct(product);
-
-    }
-
-    private void removeProductFromOrder() {
-        printActualOrder();
-        List<Product> orderedProduct = actualOrder.getProducts().keySet().stream().toList();
-        List<String> options = orderedProduct.stream()
-                .map(product -> product.getName() + ", " + product.getPrice() + "Ft")
-                .toList();
-        int numberOfProducts = printListOfOptions(options);
-        System.out.print("Melyik termébket szeretné törölni? ");
-        int indexOfProduct = getOptionNumber(numberOfProducts) - 1;
-        Product product = orderedProduct.get(indexOfProduct);
-        actualOrder.removeProduct(product);
-    }
-
-    private void refreshProducts() {
-        fillProductsIntoDB();
-        products = productService.createListOfProducts();
-        System.out.println("A termékek frissített listája: ");
-        List<String> options = products.stream()
-                .map(product -> product.getName() + "egységár" + product.getPrice())
-                .toList();
-    }
-
-    //itt lehetne szűrni hogy ami már bent van azt ne írja ki újra
-    private void addProductToOrder() {
-        printActualOrder();
-        System.out.println("A vásárolható termékek listája: ");
-        List<String> options = products.stream()
-                .map(product -> product.getName() + ", " + product.getPrice() + "Ft")
-                .toList();
-        int numberOfProducts = printListOfOptions(options);
-        System.out.print("Melyik terméből szeretne vásárolni? ");
-        int indexOfProduct = getOptionNumber(numberOfProducts) - 1;
-        Product product = products.get(indexOfProduct);
-        System.out.print("Várásolni kívánt mennyiség: ");
-        Scanner sc = new Scanner(System.in);
-        int amount = sc.nextInt();
-        actualOrder.addProduct(product, amount);
-    }
-
-    public void loginOrRegistration() {
-        List<String> options = Arrays.asList("Belépés", "Regisztráció");
-        printListOfOptions(options);
-        int option = getOptionNumber(options.size());
-        switch (option) {
-            case 1:
-                resultOfLogin(login());
-                return;
-            case 2:
-                boolean result = registration();
-                resultOfRegistration(result);
-                return;
-        }
-    }
-
-    private void resultOfRegistration(boolean result) {
-        if (result) {
-            System.out.println("Regisztráció sikeres, kérem jelentkezzen be!");
-        } else {
-            System.out.println("A regisztráció sikertelen!");
-        }
-    }
-
-    private void resultOfLogin(Optional<User> user) {
-        if (user.isEmpty()) {
-            System.out.println("Hibás e-mail cím vagy jelszó!");
-        } else {
-            actualOrder = new Basket(user.get());
-            System.out.println("Üdvözlöm a WebShop-ban!");
-        }
-    }
-
-    private Optional<User> login() {
-        Scanner sc = new Scanner(System.in);
-        String emailAddress = getEmailAddress();
-        String password = getPassword();
-        userService.loginUser(emailAddress, password);
-        return userService.loginUser(emailAddress, password);
-
-    }
-
-    private boolean registration() {
-        String emailAddress = getEmailAddress();
-        String password = getPassword();
-        return userService.registerUser(emailAddress, password);
-    }
-
-    //esetleg, ha van már mentve
-    private String getEmailAddress() {
-        boolean valid = false;
-        String email = null;
-        while (!valid) {
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Email: ");
-            email = sc.nextLine();
-            valid = isEmailValid(email);
-            if (!valid) {
-                System.out.println("Érvénytelen e-mail cím!");
-            }
-        }
-        return email;
-    }
-
-    private boolean isEmailValid(String email) {
-        return true;
-    }
-
-    private String getPassword() {
-        boolean valid = false;
-        String email = null;
-        while (!valid) {
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Password: ");
-            email = sc.nextLine();
-            valid = isPasswordValid(email);
-            if (!valid) {
-                System.out.println("Érvénytelen jelszó!");
-            }
-        }
-        return email;
-    }
-
-    private boolean isPasswordValid(String password) {
-        return true;
-    }
-
-    private void printActualOrder() {
-        System.out.print("Felhasználó: ");
-        if (actualOrder == null) {
-            System.out.println("NINCS BEJELENTKEZETT FELHASzNÁLÓ!");
-        } else {
-            System.out.println(actualOrder.getUser().getEmail());
-            System.out.println("Vásárolt termékek:");
-            if (actualOrder.getProducts().isEmpty()) {
-                System.out.println("Nincs még termék a rendelésben!\n");
-            } else {
-                actualOrder.getProducts()
-                        .forEach((product, amount) -> System.out.printf("%s: mennyiség: %d, ár: %dFt\n", product.getName(), amount, amount * product.getPrice()));
-                System.out.println();
-            }
-        }
-    }
-
-    private void fillProductsIntoDB() {
+    public void fillProductsIntoDB() {
         try (BufferedReader br = Files.newBufferedReader(Path.of(PATH_OF_PRODUCTS))) {
             List<Product> productsToSave = new ArrayList<>();
             String lines;
@@ -302,4 +48,67 @@ public class WebShopController {
             throw new IllegalStateException("Cannot load products!", ioe);
         }
     }
+
+    public boolean login(String emailAddress, String password) {
+        Optional<User> user = userService.loginUser(emailAddress, password);
+        if (user.isPresent()) {
+            actualOrder = new Basket(user.get());
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean registration(String emailAddress, String password) {
+        return userService.registerUser(emailAddress, password);
+    }
+
+    public void addProductToOrder(Product product, int amount) {
+        actualOrder.addProduct(product, amount);
+    }
+
+    public void removeProductFromOrder(Product product) {
+        actualOrder.removeProduct(product);
+    }
+
+    public void saveOrder() {
+        basketService.saveOrder(actualOrder);
+    }
+
+    public void loadProductsIntoDB() {
+        fillProductsIntoDB();
+        products = productService.createListOfProducts();
+    }
+
+    public List<String> getListOfFormattedProducts(String formatPattern) {
+        List<String> result = new ArrayList<>();
+        products.forEach(product->result.add(String.format(formatPattern, product.getName(),product.getPrice())));
+        return result;
+    }
+
+    public List<String> getListOfFormattedOrderedProducts(String formatPattern) {
+        List<String> result = new ArrayList<>();
+        actualOrder.getProducts().forEach((k, v) -> result.add(String.format(formatPattern, k.getName(), v, v * k.getPrice())));
+        return result;
+    }
+
+    public boolean isExistsOrderedProduct() {
+        return !actualOrder.getProducts().isEmpty();
+    }
+
+    public Product getProductByName(String name) {
+        return products.stream()
+                .filter(product -> name.equals(product.getName()))
+                .findFirst().get();
+    }
+
+    public boolean isUserPresent() {
+        return actualOrder != null;
+    }
+
+    public String getUserEmail() {
+        return actualOrder.getUser().getEmail();
+    }
+
+
 }

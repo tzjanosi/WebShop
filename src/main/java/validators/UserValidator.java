@@ -36,7 +36,7 @@ public class UserValidator {
         if (password == null) {
             throw new IllegalArgumentException("Password cannot be null!");
         }
-        if (password.length() < 8) {
+        if (password.length() < 7) {
             throw new IllegalArgumentException("Entered password is too short. It must be at least 8 characters!");
         }
     }
