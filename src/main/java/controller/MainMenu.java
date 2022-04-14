@@ -123,6 +123,7 @@ public class MainMenu {
             if (webShopController.isExistsOrderedProduct()) {
                 List<String> orderedProducts = webShopController.getListOfFormattedOrderedProducts("%s, %ddb, %dFt");
                 printNumberedList(orderedProducts, "Vásárolt termékek:");
+                System.out.println();
             } else {
                 System.out.println("Vásárolt termékek:");
                 System.out.println("Nincs még termék a rendelésben!\n");
