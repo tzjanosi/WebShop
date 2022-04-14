@@ -12,5 +12,5 @@ public interface ProductServiceRepository {
 
     List<Product> getAllProducts();
 
-    void insertProduct(Product vaj);
+    void insertProduct(Product product);
 }
