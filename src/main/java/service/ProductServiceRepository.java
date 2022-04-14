@@ -11,6 +11,4 @@ public interface ProductServiceRepository {
     Optional<Product> findProductByName(String name);
 
     List<Product> getAllProducts();
-
-    void insertProduct(Product product);
 }

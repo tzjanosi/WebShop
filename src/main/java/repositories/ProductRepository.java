@@ -37,11 +37,4 @@ public class ProductRepository implements ProductServiceRepository {
         }
         return Optional.of(result.get(0));
     }
-
-    @Override
-    public void insertProduct(Product productToSave) {
-        jdbcTemplate.update("INSERT INTO product (name,price,amount) VALUES(?,?,?);",productToSave.getName(), productToSave.getPrice(),0);
-//        jdbcTemplate.update("INSERT INTO product (name,price,amount) VALUES(?,?,?);",productToSave.getName(), productToSave.getPrice(),productToSave.getAmount());
-
-    }
 }
