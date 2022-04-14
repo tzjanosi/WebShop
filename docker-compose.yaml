@@ -5,5 +5,7 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MARIADB_DATABASE: mariadb
-      MARIADB_ROOT_PASSWORD: root
+      MYSQL_DATABASE: webshopDB
+      MYSQL_USER: userForWebshop
+      MYSQL_PASSWORD: PassForWebshopDBUser
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"

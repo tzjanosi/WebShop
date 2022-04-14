@@ -1,3 +1,0 @@
-# Execute this command from the dir, where you can find the docker-comopse.yaml:
-
-docker-compose exec mysql --host=localhost --user=root --database=mariadb --password=root initSchema.sql
