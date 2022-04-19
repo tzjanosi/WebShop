@@ -1,44 +1,74 @@
 package controller;
 
+import java.util.List;
+
 public class InputValidator {
 
-    public boolean validateEmail(String email) {
-        if (isTextEmpty(email)) {
-            return false;
+
+    public boolean validateNumber(String number) {
+        try {
+            Integer.parseInt(number);
+            return true;
+        } catch (NumberFormatException nfe) {
+            throw new IllegalArgumentException("Nem számot adott meg!", nfe);
         }
+    }
+
+    public boolean validateNumberInRange(int number, int max) {
+        if (number > 0 && number <= max) {
+            return true;
+        }
+        throw new IllegalArgumentException("Nincs ilyen számú lehetőség: " + number);
+    }
+
+    public boolean validateEmail(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("Az e-mail null!");
+        }
+        if (email.isBlank()) {
+            throw new IllegalArgumentException("Az e-mail üres!");
+        }
+        return isEmailValid(email);
+    }
+
+    public boolean validatePassword(String password) {
+        if (password == null) {
+            throw new IllegalArgumentException("A jelszó null!");
+        }
+        if (password.isBlank()) {
+            throw new IllegalArgumentException("A jelszó üres!");
+        }
+        return isPasswordValid(password);
+    }
+
+    private boolean isEmailValid(String email) {
         if (email.length() < 5
                 || email.lastIndexOf('.') <= email.indexOf('@') + 1
                 || email.indexOf('@') < 1
                 || email.lastIndexOf('.') == email.length() - 1) {
-            return false;
+            throw new IllegalArgumentException("Érvénytelen e-mail cím!: " + email);
         }
         return true;
     }
 
-    public boolean validateNumber(String number) {
-        String tmp = number.trim();
-        if (isTextEmpty(tmp)) {
-            return false;
-        }
-        int i = 0;
-        if (tmp.charAt(i) == '+' || tmp.charAt(i) == '-') {
-            i++;
-        }
-        int start=i;
-        while (i < tmp.length() && Character.isDigit(tmp.charAt(i))) {
-            ++i;
-        }
-        return i!=start && i == number.length();
-    }
-
-    private boolean isTextEmpty(String tmp) {
-        return tmp == null || tmp.isBlank();
-    }
-
-    public boolean validatePassword(String password) {
+    private boolean isPasswordValid(String password) {
         if (password.length() < 7) {
-            return false;
+            throw new IllegalArgumentException("A jelszó túl rövid! (Min: 7 karakter!");
         }
         return true;
+    }
+
+    public boolean validateOrderedProductsNotFull(List<String> products) {
+        if (products.isEmpty()) {
+            throw new IllegalStateException("Már minden termékből rendelt!");
+        }
+        return true;
+    }
+
+    public boolean validateOrderedProductsEmpty(List<String> orderedProducts) {
+        if (orderedProducts.isEmpty()) {
+            throw new IllegalStateException("A megrendelt termékek listája üres!");
+        }
+        return false;
     }
 }

@@ -1,7 +1,6 @@
 package main;
 
 import controller.*;
-import entities.Product;
 import org.mariadb.jdbc.MariaDbDataSource;
 import repositories.BasketRepository;
 import repositories.DBSource;
@@ -21,7 +20,7 @@ public class Main {
         BasketControllerService basketService = new BasketService(basketRepository);
         ProductControllerService productService = new ProductService(productRepository);
         UserControllerService userService = new UserService(userRepository);
-        WebShopController controller = new WebShopController(basketService, productService, userService);
+        WebShopController controller = new WebShopController(basketService, productService, userService, new WebShopControllerValidator());
 
         userService.registerUser("kisrozal@gmail.com", "password");
         userService.registerUser("Fehervirag@freemail.hu", "pass987word");

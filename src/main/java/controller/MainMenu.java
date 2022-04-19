@@ -15,7 +15,8 @@ public class MainMenu {
 
     private InputValidator validator;
 
-    public static final List<String> YES_NO_ANSWERS = Arrays.asList("y", "yes", "i", "igen", "n", "no", "nem");
+    public static final List<String> NO_ANSWERS = Arrays.asList("n", "no", "nem");
+    public static final List<String> YES_ANSWERS = Arrays.asList("y", "yes", "i", "igen");
 
     public MainMenu(WebShopController webShopController, InputValidator validator) {
         this.webShopController = webShopController;
@@ -24,60 +25,31 @@ public class MainMenu {
     }
 
     public void menu() {
-        int numberOfOptions;
         int option;
+        List<String> actualOptions;
         do {
             System.out.println("-".repeat(80));
             printActualOrder();
-            numberOfOptions = printMainMenu();
+            System.out.println("-".repeat(60));
+            System.out.println("Válasszon a lehetőségek közül:");
+            if (webShopController.isUserPresent()) {
+                actualOptions = options;
+            } else {
+                actualOptions = Arrays.asList(options.get(0), options.get(options.size() - 1));
+            }
+            option = getOption(actualOptions);
             System.out.println("-".repeat(80));
-            option = getOptionNumber(numberOfOptions, "Kérem a választott menüpont számát: ", "Nincs ilyen menüpont!");
             processOption(option);
-        } while (option != numberOfOptions);
-    }
-
-    private int printMainMenu() {
-        String label = "Menü";
-        int numberOfOptions;
-        if (webShopController.isUserPresent()) {
-            numberOfOptions = printNumberedList(options, label);
-        } else {
-            numberOfOptions = printNumberedList(Arrays.asList(options.get(0), options.get(options.size() - 1)), label);
-        }
-        return numberOfOptions;
+        } while (option != actualOptions.size());
+        System.out.println("Viszont látásra!");
     }
 
     private int printNumberedList(List<String> options, String label) {
         System.out.println(label);
         for (int i = 1; i <= options.size(); i++) {
-            System.out.printf("%2d %s\n", i, options.get(i - 1));
+            System.out.printf("%2d %s%n", i, options.get(i - 1));
         }
         return options.size();
-    }
-
-    private int getOptionNumber(int optionNumbers, String label, String errortext) {
-        boolean valid = false;
-        int number = 0;
-        while (!valid) {
-            number = getNumber(label, errortext);
-            if (number > 0 && number <= optionNumbers) {
-                valid = true;
-            } else {
-                System.out.println(errortext);
-            }
-        }
-        return number;
-    }
-
-
-    private int getNumber(String label, String errorText) {
-        System.out.print(label);
-        Scanner sc = new Scanner(System.in);
-        String text;
-        while (!validator.validateNumber(text = sc.nextLine())) {
-            System.out.print(errorText + "\n" + label);
-        }
-        return Integer.parseInt(text.strip());
     }
 
     private void initOptions() {
@@ -92,195 +64,245 @@ public class MainMenu {
 
 
     private void processOption(int optionNumber) {
-        //kiszervezni metódusokba
         switch (optionNumber) {
             case 1:
-                loginOrRegistration();
+                try {
+                    loginOrRegistration();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 return;
             case 2:
-                addProductToOrder();
+                try {
+                    addProductToOrder();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 return;
             case 3:
-                removeProductFromOrder();
+                try {
+                    removeProductFromOrder();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 return;
             case 4:
-                growsOrderedProductAmount();
+                try {
+                    growsOrderedProductAmount();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 return;
+
             case 5:
-                saveOrder();
+                try {
+                    saveOrder();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 return;
             case 6:
-                refreshProducts();
+                try {
+                    refreshProducts();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 return;
+            default:
         }
     }
 
-
-    //ToDo
     private void printActualOrder() {
         printActualUser();
         if (webShopController.isUserPresent()) {
-            if (webShopController.isExistsOrderedProduct()) {
-                List<String> orderedProducts = webShopController.getListOfFormattedOrderedProducts("%s, %ddb, %dFt");
-                printNumberedList(orderedProducts, "Vásárolt termékek:");
-                System.out.println();
-            } else {
+            if (webShopController.isOrderedProductsEmpty()) {
                 System.out.println("Vásárolt termékek:");
                 System.out.println("Nincs még termék a rendelésben!\n");
+            } else {
+                List<String> orderedProducts = webShopController.getFormattedListOfOrderedProducts("%s, %ddb, %dFt");
+                System.out.println("Vásárolt termékek:");
+                printListItems(orderedProducts);
+                System.out.println();
             }
         }
     }
 
     private boolean printActualUser() {
         System.out.print("Felhasználó: ");
-        if (webShopController.isUserPresent()) {
+        boolean userLoggedIn = webShopController.isUserPresent();
+        if (userLoggedIn) {
             System.out.println(webShopController.getUserEmail());
         } else {
             System.out.println("NINCS BEJELENTKEZETT FELHASZNÁLÓ!");
         }
-        return webShopController.isUserPresent();
+        return userLoggedIn;
     }
 
     private void loginOrRegistration() {
-        List<String> options = Arrays.asList("Belépés", "Regisztráció");
-        printNumberedList(options, "Válaszzon a lehetőségek közül:");
-        int option = getOptionNumber(options.size(), "Kérem a választott menüpont számát: ", "Nincs ilyen menüpont!");
+        List<String> subOptions = Arrays.asList("Belépés", "Regisztráció");
+        int option = getOption(subOptions);
+        System.out.println("-".repeat(40));
         switch (option) {
             case 1:
+                System.out.println("Belépés:");
                 login();
                 return;
             case 2:
+                System.out.println("Regisztráció:");
                 registration();
                 return;
+            default:
         }
     }
 
     private void registration() {
-        String email;
-        String password;
-        boolean result;
-        email = getEmailAddress();
-        password = getPassword();
-        result = webShopController.registration(email, password);
+        String email = getValidEmail();
+        String password = getValidPassword();
+        boolean result = webShopController.registration(email, password);
         if (result) {
-            System.out.println("Regisztráció sikeres, kérem jelentkezzen be!");
+            System.out.println("Sikeres regisztráció, kérem jelentkezzen be!");
         } else {
-            System.out.println("A regisztráció sikertelen!");
+            System.out.println("Sikertelen regisztráció! A megadott e-mail cím már regisztrálva van!");
         }
     }
 
     private void login() {
-        String email;
-        String password;
-        boolean result;
-        email = getEmailAddress();
-        password = getPassword();
-        result = webShopController.login(email, password);
+        String email = getValidEmail();
+        String password = getValidPassword();
+        boolean result = webShopController.login(email, password);
         if (result) {
             System.out.println("Üdvözlöm a WebShop-ban!");
-        } else {
-            System.out.println("Hibás e-mail cím vagy jelszó!");
         }
     }
 
-    private String getEmailAddress() {
+    private String getValidEmail() {
+        Scanner sc = new Scanner(System.in);
+        String email = "";
         boolean valid = false;
-        String email = null;
-        while (!valid) {
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Email: ");
-            email = sc.nextLine();
-            valid = validator.validateEmail(email);
-            if (!valid) {
-                System.out.println("Érvénytelen e-mail cím!");
+        do {
+            try {
+                System.out.print("Kérem az e-mail címet: ");
+                email = sc.nextLine();
+                valid = validator.validateEmail(email);
+            } catch (IllegalArgumentException iae) {
+                System.out.println(iae.getMessage());
             }
-        }
+        } while (!valid);
         return email;
     }
 
-    private String getPassword() {
+    private String getValidPassword() {
+        Scanner sc = new Scanner(System.in);
+        String password = "";
         boolean valid = false;
-        String password = null;
-        while (!valid) {
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Password: ");
-            password = sc.nextLine();
-            valid = validator.validatePassword(password);
-            if (!valid) {
-                System.out.println("Érvénytelen jelszó!");
+        do {
+            try {
+                System.out.print("Kérem a jelszót: ");
+                password = sc.nextLine();
+                valid = validator.validatePassword(password);
+            } catch (IllegalArgumentException iae) {
+                System.out.println(iae.getMessage());
             }
-        }
+        } while (!valid);
         return password;
     }
 
     private void addProductToOrder() {
         printActualOrder();
-        Product product = getProductFromFormattedProductList();
-        int amount = getNumber("Várásolni kívánt mennyiség: ", "Hibás adat!");
-        webShopController.addProductToOrder(product, amount);
-        System.out.println(product.getName() + " termék " + amount + " darabszámmal hozzáadva a rendeléshez!");
-    }
-
-    private Product getProductFromFormattedProductList() {
-        List<String> formattedProductList = webShopController.getListOfFormattedProducts("%s, %dFt");
-        int numberOfProducts = printNumberedList(formattedProductList, "Melyik terméből szeretne vásárolni? ");
-        int indexOfProduct = getOptionNumber(numberOfProducts, "Termék sorszáma: ", "Nincs ilyen számú termék! ") - 1;
-        return getProduct(formattedProductList, indexOfProduct);
+        System.out.println("Rendelhető termékek: ");
+        List<String> products = new ArrayList<>(webShopController.getProductNames());
+        products.removeAll(webShopController.getOrderedProductNames());
+        validator.validateOrderedProductsNotFull(products);
+        String productName = products.get(getOption(products) - 1);
+        Product product = webShopController.getProductByName(productName);
+        webShopController.addProductToOrder(product);
+        System.out.println(product.getName() + " termék hozzáadva a rendeléshez!");
     }
 
     private void removeProductFromOrder() {
-        printActualOrder();
-        Product product = getProductFromFormattedOrderedProductList("Melyik terméket szeretné törölni?");
+        List<String> orderedProducts = webShopController.getOrderedProductNames();
+        validator.validateOrderedProductsEmpty(orderedProducts);
+        System.out.println("Melyik terméket szeretné törölni?");
+        String productName = orderedProducts.get(getOption(orderedProducts) - 1);
+        Product product = webShopController.getProductByName(productName);
         webShopController.removeProductFromOrder(product);
         System.out.println(product.getName() + " termék törölve a rendelésből!");
     }
 
     private void growsOrderedProductAmount() {
-        printActualOrder();
-        Product product = getProductFromFormattedOrderedProductList("Melyik terméket szeretné törölni?");
-        System.out.print("Mennyivel növeli a vásárolt mennyiséget? ");
-        Scanner sc = new Scanner(System.in);
-        int amount = sc.nextInt();
+        List<String> orderedProducts = webShopController.getOrderedProductNames();
+        validator.validateOrderedProductsEmpty(orderedProducts);
+        System.out.println("Melyik termékből szeretne többet rendelni?");
+        String productName = orderedProducts.get(getOption(orderedProducts) - 1);
+        Product product = webShopController.getProductByName(productName);
+        int amount = getNumber("Mennyivel növeli a vásárolt mennyiséget? ");
         webShopController.addProductToOrder(product, amount);
-    }
-
-    private Product getProductFromFormattedOrderedProductList(String label) {
-        List<String> formattedProductList = webShopController.getListOfFormattedOrderedProducts("%s, %ddb, %dFt");
-        int numberOfProducts = printNumberedList(formattedProductList, "Melyik terméből szeretne vásárolni? ");
-        int indexOfProduct = getOptionNumber(numberOfProducts, "Termék sorszáma: ", "Nincs ilyen számú termék! ") - 1;
-        Product product = getProduct(formattedProductList, indexOfProduct);
-        return product;
-    }
-
-    private Product getProduct(List<String> formattedProductList, int indexOfProduct) {
-        int endIndex = formattedProductList.get(indexOfProduct).indexOf(',');
-        String productName = formattedProductList.get(indexOfProduct).substring(0, endIndex);
-        return webShopController.getProductByName(productName);
     }
 
 
     public void refreshProducts() {
         webShopController.loadProductsIntoDB();
-        List<String> newProducts = webShopController.getListOfFormattedProducts("%s, %dFt");
+        List<String> newProducts = webShopController.getFormattedListOfProducts("%s, %dFt");
         printNumberedList(newProducts, "A termékek frissített listája: ");
     }
 
     public void saveOrder() {
         printActualOrder();
-        System.out.println("Biztos a vásárlásban?");
-        boolean trustedOrder = askSaveOrder();
-        if (trustedOrder) {
-            webShopController.saveOrder();
+        System.out.print("Biztos a vásárlásban? ");
+        boolean signedOrder = askSaveOrder();
+        if (signedOrder) {
+            try {
+                webShopController.saveOrder();
+                System.out.println("A rendelés leadása megtörtént! Köszönjük, hogy nálunk vásárolt!");
+                return;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
+        System.out.println("A rendelés véglegesítése visszavonva! Folytathatja a rendelést!");
     }
 
     private boolean askSaveOrder() {
         Scanner sc = new Scanner(System.in);
-        String answer = sc.nextLine();
-        if (YES_NO_ANSWERS.contains(answer.toLowerCase())) {
+        String answer = sc.nextLine().toLowerCase();
+        if (YES_ANSWERS.contains(answer)) {
             return true;
-        } else {
+        } else if (NO_ANSWERS.contains(answer)) {
             return false;
         }
+        throw new IllegalArgumentException("Hibás adat a megrendelés véglegesítésekor: " + answer);
+    }
+
+
+    private int getOption(List<String> options) {
+        int numberOfOptions = printListItems(options);
+        int selected = 0;
+        boolean valid = false;
+        do {
+            try {
+                selected = getNumber("Kérem válasszon (1-" + numberOfOptions + "): ");
+                valid = validator.validateNumberInRange(selected, numberOfOptions);
+            } catch (IllegalArgumentException iae) {
+                System.out.println(iae.getMessage());
+            }
+        } while (!valid);
+        return selected;
+    }
+
+    private int printListItems(List<String> items) {
+        for (int i = 0; i < items.size(); i++) {
+            System.out.printf("%2d. %s%n", i + 1, items.get(i));
+        }
+        return items.size();
+    }
+
+    private int getNumber(String label) {
+        Scanner sc = new Scanner(System.in);
+        String text;
+        do {
+            System.out.print(label);
+            text = sc.nextLine();
+        } while (!validator.validateNumber(text));
+        return Integer.parseInt(text);
     }
 }
