@@ -1,11 +1,9 @@
 package repositories;
 
 import entities.User;
-import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mariadb.jdbc.MariaDbDataSource;
-import service.UserServiceRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
