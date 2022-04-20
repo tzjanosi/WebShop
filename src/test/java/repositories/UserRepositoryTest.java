@@ -2,6 +2,7 @@ package repositories;
 
 import entities.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mariadb.jdbc.MariaDbDataSource;
 
@@ -18,6 +19,7 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("User insert into the DB and findUser test")
     void insertAndGetProductByNameTest() {
         userRepository.saveUser(new User("kisrozal@gmail.com", "password"));
         User user=userRepository.findUserByEmail("kisrozal@gmail.com").get();
@@ -25,7 +27,5 @@ class UserRepositoryTest {
                 () -> assertEquals("kisrozal@gmail.com",user.getEmail()),
                 () -> assertEquals("password".hashCode(),user.getPassword())
         );
-
-
     }
 }
