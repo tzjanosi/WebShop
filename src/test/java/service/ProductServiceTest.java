@@ -1,6 +1,7 @@
 package service;
 
 import entities.Product;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +27,7 @@ class ProductServiceTest {
     ProductService productService;
 
     @Test
+    @DisplayName("Test that the service can create the list of all the products in the database.")
     void createListOfProductsTest() {
         List<Product> products = List.of(new Product("bread", 300),
         new Product("milk", 250),
@@ -39,6 +41,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Test insert a product")
     void insertProductTest() {
         Product product = new Product("milk", 250);
         productService.insertProduct(product);
@@ -46,6 +49,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Test insert multiple products by a list of products")
     void insertMultipleProductsTest() {
         List<Product> products = List.of(new Product("bread", 300),
                 new Product("milk", 250),
@@ -65,6 +69,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Test what happens, ahen the product somebody wants to find, not found in the database")
     void findProductByNameNotInListTest() {
         when(productRepository.findProductByName("milk")).thenReturn(Optional.empty());
         assertThat(productService.findProductByName("milk"))
