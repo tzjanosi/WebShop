@@ -2,7 +2,6 @@ package repositories;
 
 import entities.Product;
 
-import entities.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import service.ProductServiceRepository;
 

@@ -1,7 +1,5 @@
 package entities;
 
-import validators.UserValidator;
-
 public class User {
 
     private Long id;
