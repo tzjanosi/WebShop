@@ -1,23 +1,30 @@
 package repositories;
 
 import entities.Product;
+import org.flywaydb.core.Flyway;
+import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mariadb.jdbc.MariaDbDataSource;
-
 import java.util.List;
-import java.util.stream.Collectors;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductRepositoryTest {
     ProductRepository productRepository;
+    String migrationDirectory="db/migrations";
 
     @BeforeEach
     void init() {
-        DBSource dbSource = new DBSource("/webshop.properties");
-        MariaDbDataSource dataSource = dbSource.getDataSource();
+        JdbcDataSource dataSource = new JdbcDataSource();
+
+        dataSource.setUrl("jdbc:h2:~/test");
+        dataSource.setUser("sa");
+        dataSource.setPassword("sa");
+
+        Flyway flyway = Flyway.configure().locations(migrationDirectory).dataSource(dataSource).load();
+
+        flyway.clean();
+        flyway.migrate();
         productRepository = new ProductRepository(dataSource);
 
         productRepository.saveProduct(new Product("Vaj",400));
