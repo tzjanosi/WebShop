@@ -1,6 +1,7 @@
 package service;
 
 import entities.User;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,7 @@ class UserServiceTest {
     UserService userService;
 
     @Test
+    @DisplayName("Register a user, happy path.")
     void registerUserTest() {
         when(userRepository.findUserByEmail("testuser@testdomain.com")).thenReturn(Optional.empty());
         when(userRepository.saveUser(any(User.class))).thenReturn(true);
@@ -32,6 +34,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Register a user's email already in the database")
     void registerUserAlreadyExistsTest() {
         when(userRepository.findUserByEmail("testuser@testdomain.com"))
                 .thenReturn(Optional.of(new User("testuser@testdomain.com", "testPassword")));
@@ -41,6 +44,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Test trimming input strings")
     void registerUserTestWithLeadingAndTrailingWhiteSpacesTest() {
         when(userRepository.findUserByEmail("testuser@testdomain.com")).thenReturn(Optional.empty());
         when(userRepository.saveUser(any(User.class))).thenReturn(true);
@@ -50,6 +54,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Test trimming input strings when user's email already in the database.")
     void registerUserAlreadyExistsWithLeadingAndTrailingWhiteSpacesTest() {
         when(userRepository.findUserByEmail("testuser@testdomain.com"))
                 .thenReturn(Optional.of(new User("testuser@testdomain.com", "testPassword")));
@@ -59,6 +64,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Login user, happy path")
     void loginUserHappyPathTest() {
         Optional<User> user = Optional.of(new User("testuser@testdomain.com", "testPassword"));
         when(userRepository.findUserByEmail("testuser@testdomain.com"))
@@ -68,6 +74,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Test login with wrong password")
     void loginUserWrongPasswordTest() {
         Optional<User> user = Optional.of(new User("testuser@testdomain.com", "testPassword"));
         when(userRepository.findUserByEmail("testuser@testdomain.com"))
@@ -77,6 +84,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Test login with email not in the database")
     void loginUserNotExistsTest() {
         when(userRepository.findUserByEmail("noSuchUser@testdomain.com"))
                 .thenReturn(Optional.empty());
