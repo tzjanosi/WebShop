@@ -1,20 +1,31 @@
 package repositories;
 
 import entities.User;
+import org.flywaydb.core.Flyway;
+import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mariadb.jdbc.MariaDbDataSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserRepositoryTest {
     UserRepository userRepository;
+    String migrationDirectory="db/migrations";
 
     @BeforeEach
     void init() {
-        DBSource dbSource = new DBSource("/webshop.properties");
-        MariaDbDataSource dataSource = dbSource.getDataSource();
+        JdbcDataSource dataSource = new JdbcDataSource();
+
+        dataSource.setUrl("jdbc:h2:~/test");
+        dataSource.setUser("sa");
+        dataSource.setPassword("sa");
+
+        Flyway flyway = Flyway.configure().locations(migrationDirectory).dataSource(dataSource).load();
+
+        flyway.clean();
+        flyway.migrate();
+
         userRepository = new UserRepository(dataSource);
     }
 
