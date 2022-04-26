@@ -64,6 +64,9 @@ public class WebShopController {
     }
 
     public String getUserEmail() {
+        if (actualOrder == null) {
+            throw new IllegalStateException("The e-mail is null!");
+        }
         return actualOrder.getUser().getEmail();
     }
 

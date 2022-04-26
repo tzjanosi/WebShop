@@ -52,7 +52,10 @@ public class WebShopControllerValidator {
         if (isStringEmpty(password)) {
             throw new IllegalArgumentException("A jelszó üres!");
         }
-        return isPasswordValid(password);
+        if (!isPasswordValid(password)) {
+            throw new IllegalArgumentException("A jelszó túl rövid!");
+        }
+        return true;
     }
 
     private boolean isStringNull(String text) {
@@ -68,7 +71,7 @@ public class WebShopControllerValidator {
                 || email.lastIndexOf('.') <= email.indexOf('@') + 1
                 || email.indexOf('@') < 1
                 || email.lastIndexOf('.') == email.length() - 1) {
-            throw new IllegalArgumentException("Érvénytelen e-mail-cím!: " + email);
+            throw new IllegalArgumentException("Érvénytelen e-mail cím!: " + email);
         }
         return true;
     }
@@ -92,6 +95,5 @@ public class WebShopControllerValidator {
             return true;
         }
         throw new IllegalArgumentException("A keresett termék nincs a listában.");
-
     }
 }
