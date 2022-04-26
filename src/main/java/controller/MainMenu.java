@@ -212,7 +212,7 @@ public class MainMenu {
         System.out.println("Rendelhető termékek: ");
         List<String> products = new ArrayList<>(webShopController.getProductNames());
         products.removeAll(webShopController.getOrderedProductNames());
-        validator.validateOrderedProductsNotFull(products);
+        validator.isThereMissingProduct(products);
         String productName = products.get(getOption(products) - 1);
         Product product = webShopController.getProductByName(productName);
         webShopController.addProductToOrder(product);
@@ -221,7 +221,7 @@ public class MainMenu {
 
     private void removeProductFromOrder() {
         List<String> orderedProducts = webShopController.getOrderedProductNames();
-        validator.validateOrderedProductsEmpty(orderedProducts);
+        validator.isOrderedProductsEmpty(orderedProducts);
         System.out.println("Melyik terméket szeretné törölni?");
         String productName = orderedProducts.get(getOption(orderedProducts) - 1);
         Product product = webShopController.getProductByName(productName);
@@ -231,7 +231,7 @@ public class MainMenu {
 
     private void growsOrderedProductAmount() {
         List<String> orderedProducts = webShopController.getOrderedProductNames();
-        validator.validateOrderedProductsEmpty(orderedProducts);
+        validator.isOrderedProductsEmpty(orderedProducts);
         System.out.println("Melyik termékből szeretne többet rendelni?");
         String productName = orderedProducts.get(getOption(orderedProducts) - 1);
         Product product = webShopController.getProductByName(productName);

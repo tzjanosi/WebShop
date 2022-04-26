@@ -41,6 +41,20 @@ public class InputValidator {
         return isPasswordValid(password);
     }
 
+    public boolean isThereMissingProduct(List<String> missingProducts) {
+        if (missingProducts.isEmpty()) {
+            throw new IllegalStateException("Már minden termékből rendelt!");
+        }
+        return true;
+    }
+
+    public boolean isOrderedProductsEmpty(List<String> orderedProducts) {
+        if (orderedProducts.isEmpty()) {
+            throw new IllegalStateException("A megrendelt termékek listája üres!");
+        }
+        return false;
+    }
+
     private boolean isEmailValid(String email) {
         if (email.length() < 5
                 || email.lastIndexOf('.') <= email.indexOf('@') + 1
@@ -53,22 +67,8 @@ public class InputValidator {
 
     private boolean isPasswordValid(String password) {
         if (password.length() < 7) {
-            throw new IllegalArgumentException("A jelszó túl rövid! (Min: 7 karakter!");
+            throw new IllegalArgumentException("A jelszó túl rövid! (Min: 7 karakter)!");
         }
         return true;
-    }
-
-    public boolean validateOrderedProductsNotFull(List<String> products) {
-        if (products.isEmpty()) {
-            throw new IllegalStateException("Már minden termékből rendelt!");
-        }
-        return true;
-    }
-
-    public boolean validateOrderedProductsEmpty(List<String> orderedProducts) {
-        if (orderedProducts.isEmpty()) {
-            throw new IllegalStateException("A megrendelt termékek listája üres!");
-        }
-        return false;
     }
 }
